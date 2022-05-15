@@ -7,6 +7,7 @@ const schema = new mongoose.Schema(
     number: { type: String, unique: true, required: true },
     isVerified: { type: Boolean, default: false },
     alias: { type: String, unique: true, required: true },
+    isConnected: { type: Boolean, default: false },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

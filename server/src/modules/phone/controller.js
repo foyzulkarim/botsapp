@@ -11,6 +11,10 @@ const {
 const { validate } = require("./request");
 const { handleValidation } = require("../../common/middlewares");
 const { GeneralError } = require("../../common/errors");
+const {
+  createClient: createWaClient,
+  setup: setupWhatsApp,
+} = require("./whatsapp");
 
 const router = express.Router();
 
@@ -33,11 +37,17 @@ const saveHandler = async (req, res, next) => {
   return baseSaveHandler(req, res, next);
 };
 
+setupWhatsApp();
+
 router.get("/detail", getByIdHandler);
 router.post("/create", handleValidation(validate), saveHandler);
 router.put("/update", handleValidation(validate), updateHandler);
 router.post("/search", searchHandler);
 router.post("/count", countHandler);
 router.delete("/delete", deleteHandler);
+router.get("/activate/:number", async (req, res) => {
+  const { number } = req.params;
+  createWaClient(number, req, res);
+});
 
 module.exports = router;

@@ -271,6 +271,13 @@ export default defineConfig({
           path: '/phones/edit/:id',
           component: './phones/phone-update',
         },
+        {
+          name: 'Activate',
+          hideInMenu: true,
+          icon: 'smile',
+          path: '/phones/activate/:id',
+          component: './phones/phone-activate',
+        },
       ],
     },
     {

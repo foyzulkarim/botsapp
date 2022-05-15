@@ -23,3 +23,7 @@ export async function save(params) {
 export async function remove(id, options) {
   return await del(`/api/phones/delete?id=${id}`, {}, options);
 }
+
+export async function searchPhone(params) {
+  return await post('/api/phones/search', params);
+}
