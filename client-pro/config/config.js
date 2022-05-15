@@ -243,6 +243,37 @@ export default defineConfig({
       ],
     },
     {
+      // access: 'canAccess',
+      path: '/phones',
+      icon: 'phone',
+      name: 'Phones',
+      routes: [
+        {
+          path: '/phones',
+          redirect: '/phones/list',
+        },
+        {
+          name: 'List',
+          icon: 'smile',
+          path: '/phones/list',
+          component: './phones/phone-list',
+        },
+        {
+          name: 'New',
+          icon: 'smile',
+          path: '/phones/new',
+          component: './phones/phone-entry',
+        },
+        {
+          name: 'Update',
+          hideInMenu: true,
+          icon: 'smile',
+          path: '/phones/edit/:id',
+          component: './phones/phone-update',
+        },
+      ],
+    },
+    {
       path: '/form',
       icon: 'form',
       name: 'form',

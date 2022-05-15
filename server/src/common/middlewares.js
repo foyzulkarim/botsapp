@@ -81,6 +81,9 @@ const authenticateRequest = async (req, res, next) => {
 
 // authorize request
 const authorizeRequest = async (req, res, next) => {
+  if (process.env.AUTHORIZATION_DISABLED === "true") {
+    return next();
+  }
   const { user } = req;
   if (user) {
     const { username, roleId } = user;
