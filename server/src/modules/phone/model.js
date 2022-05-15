@@ -24,6 +24,7 @@ const schema = new mongoose.Schema(
 // indices
 // text index for name
 schema.index({ number: "text" });
+schema.index({ createdBy: 1 });
 
 // index for createdAt and updatedAt
 schema.index({ createdAt: 1 });

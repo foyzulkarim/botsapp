@@ -274,6 +274,37 @@ export default defineConfig({
       ],
     },
     {
+      // access: 'canAccess',
+      path: '/messages',
+      icon: 'message',
+      name: 'Messages',
+      routes: [
+        {
+          path: '/messages',
+          redirect: '/messages/list',
+        },
+        {
+          name: 'List',
+          icon: 'smile',
+          path: '/messages/list',
+          component: './messages/message-list',
+        },
+        {
+          name: 'New',
+          icon: 'smile',
+          path: '/messages/new',
+          component: './messages/message-entry',
+        },
+        {
+          name: 'Update',
+          hideInMenu: true,
+          icon: 'smile',
+          path: '/messages/edit/:id',
+          component: './messages/message-update',
+        },
+      ],
+    },
+    {
       path: '/form',
       icon: 'form',
       name: 'form',

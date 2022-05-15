@@ -1,8 +1,8 @@
 const express = require("express");
-const { getQuery, checkIfPhoneExists } = require("./service");
+const { getQuery } = require("./service");
 const {
   getByIdHandler,
-  saveHandler: baseSaveHandler,
+  saveHandler,
   updateHandler,
   searchHandler: baseSearchHandler,
   countHandler: baseCountHandler,
@@ -10,7 +10,6 @@ const {
 } = require("../../core/controller");
 const { validate } = require("./request");
 const { handleValidation } = require("../../common/middlewares");
-const { GeneralError } = require("../../common/errors");
 
 const router = express.Router();
 
@@ -22,15 +21,6 @@ const searchHandler = async (req, res, next) => {
 const countHandler = async (req, res, next) => {
   req.searchQuery = getQuery({ ...req.body, userId: req.user.id });
   return baseCountHandler(req, res, next);
-};
-
-const saveHandler = async (req, res, next) => {
-  const phoneExists = await checkIfPhoneExists(req.body);
-  if (phoneExists) {
-    const errorMessage = `Already a phone exists`;
-    return next(new GeneralError(errorMessage));
-  }
-  return baseSaveHandler(req, res, next);
 };
 
 router.get("/detail", getByIdHandler);
