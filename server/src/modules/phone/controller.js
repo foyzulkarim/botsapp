@@ -1,5 +1,5 @@
 const express = require("express");
-const { getQuery, checkIfPhoneExists } = require("./service");
+const { getQuery, checkIfPhoneExists, modelName } = require("./service");
 const {
   getByIdHandler,
   saveHandler: baseSaveHandler,
@@ -10,6 +10,12 @@ const {
 } = require("../../core/controller");
 const { validate } = require("./request");
 const { handleValidation } = require("../../common/middlewares");
+const {
+  dynamicSearch,
+  update,
+  searchOne,
+  save,
+} = require("../../core/repository");
 const { GeneralError } = require("../../common/errors");
 const {
   createClient: createWaClient,
@@ -45,8 +51,13 @@ router.put("/update", handleValidation(validate), updateHandler);
 router.post("/search", searchHandler);
 router.post("/count", countHandler);
 router.delete("/delete", deleteHandler);
-router.get("/activate/:number", async (req, res) => {
+router.get("/activate/:number", async (req, res, next) => {
   const { number } = req.params;
+  const phone = await searchOne({ number, isVerified: true }, modelName);
+  if (!phone) {
+    const errorMessage = `Verified phone not found`;
+    return next(new GeneralError(errorMessage));
+  }
   createWaClient(number, req, res);
 });
 

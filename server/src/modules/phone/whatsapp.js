@@ -15,18 +15,19 @@ let eventEmitter;
 const clients = [];
 
 const createClient = (number, req, res) => {
+  console.log("createClient", number);
   const client = new Client({
     authStrategy: new LocalAuth({
       clientId: number,
     }),
     puppeteer: {
       headless: true,
-      // args: [
-      //   "--no-sandbox",
-      //   "--disable-setuid-sandbox",
-      //   "--remote-debugging-port=9222",
-      // ],
-      // executablePath: "/usr/bin/google-chrome",
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--remote-debugging-port=9222",
+      ],
+      executablePath: "/usr/bin/google-chrome",
     },
   });
 
@@ -45,10 +46,13 @@ const createClient = (number, req, res) => {
 
   client.on("qr", (qr) => {
     // Generate and scan this code with your phone
-    console.log("QR RECEIVED", qr);
+    console.log("QR RECEIVED", qr, number);
     qrcode.generate(qr, { small: true });
     res && res.write(qr);
   });
+
+  const verifyText =
+    "Please type `verify` followed by space then your fully qualified phone number with country code to verify your number. Example: `verify 8801XXXXXXXXX` for Bangladeshi number";
 
   client.on("ready", (x) => {
     console.log("Client is ready!", x);
@@ -64,6 +68,17 @@ const createClient = (number, req, res) => {
       }
     });
     // client.sendMessage(`${process.env.SYSTEM_PHONE}@c.us`, "authenticated");
+
+    if (number === process.env.SYSTEM_PHONE) {
+      eventEmitter.on("verify-phone", (phoneObj) => {
+        console.log("verify-phone", phoneObj);
+        client
+          .sendMessage(`${phoneObj.number}@c.us`, verifyText)
+          .then((message) => {
+            console.log("message sent", message);
+          });
+      });
+    }
     clients.push(client);
   });
 
@@ -75,47 +90,50 @@ const createClient = (number, req, res) => {
 
     let handled = false;
 
-    if (msg.body.toLowerCase() === "help") {
-      let reply = "To verify your phone number, type `verify` \n";
-      reply +=
-        "To know more about this chatbot, who built this, how can you get this for yourself, type `Know more`";
-      client.sendMessage(msg.from, reply);
-      handled = true;
-    }
-
-    if (msg.body.toLowerCase() === "trx") {
-      client.sendMessage(
-        msg.from,
-        "Please send your transaction id in this format `trxid id`"
-      );
-      handled = true;
-    }
-
-    if (msg.body.toLowerCase().startsWith("trxid")) {
-      const trxId = msg.body.split(" ")[1];
-      if (trxId) {
-        client.sendMessage(msg.from, `Your transaction id is ${trxId}`);
-      } else {
-        client.sendMessage(
-          msg.from,
-          "Please send your transaction id in this format `trxid <id>`. Example `trxid 123456789`"
-        );
+    if (number === process.env.SYSTEM_PHONE) {
+      if (msg.body.toLowerCase().startsWith("verify ")) {
+        const phoneNumber = msg.body.split(" ")[1];
+        console.log("verify phone", phoneNumber);
+        if (msg.from.startsWith(phoneNumber)) {
+          searchOne({ number: phoneNumber }, modelName).then((phoneModel) => {
+            if (!phoneModel) {
+              msg.reply(
+                "Phone number not found. To have your own bot using your number, or to know more about this WhatsApp bot, please contact the admin via email at foyzulkarim@gmail.com or facebook.com/foyzulkarim365"
+              );
+            } else {
+              // eslint-disable-next-line no-param-reassign
+              phoneModel.isVerified = true;
+              update(phoneModel, modelName).then((updatedPhoneModel) => {
+                console.log("phone verified", updatedPhoneModel);
+                msg.reply(
+                  "Your phone is now verified. You can activate your phone now."
+                );
+              });
+            }
+          });
+        } else {
+          msg.reply(
+            "Invalid number. Phone number not verified. Please try again or type `help`"
+          );
+        }
+        handled = true;
       }
+    }
+
+    if (msg.body.toLowerCase() === "help") {
+      let reply1 =
+        "The receiver didn't setup the bot properly. Please contact the system administrator or type `know more`.";
+      if (msg.to.startsWith(process.env.SYSTEM_PHONE)) {
+        reply1 += `\n\n${verifyText}`;
+      }
+      client.sendMessage(msg.from, reply1);
       handled = true;
     }
 
     if (msg.body.toLowerCase() === "know more") {
       client.sendMessage(
         msg.from,
-        "This chatbot is built by Foyzul Karim. You can reach me via email at foyzulkarim@gmail.com or facebook.com/foyzulkarim365 or type `chat` to chat with me."
-      );
-      handled = true;
-    }
-
-    if (msg.body.toLowerCase() === "chat") {
-      client.sendMessage(
-        msg.from,
-        "Hi. Thanks for your interest. Foyzul will reply you soon. Look for `non reply` messages. Thanks for your patience."
+        "This hardcoded chatbot is built by Foyzul Karim. For dynamic logic for your  system, you can reach him via email at foyzulkarim@gmail.com or facebook.com/foyzulkarim365"
       );
       handled = true;
     }
@@ -141,7 +159,7 @@ const createClient = (number, req, res) => {
     if (
       msg === "authenticated" ||
       msg ===
-      "Sorry, I am just a bot, I don't understand your words. Please type `help` for more info."
+      "I am groot. I don't understand your words. Please type `help` for more info."
     ) {
       handled = true;
     }
@@ -149,7 +167,7 @@ const createClient = (number, req, res) => {
     if (!handled) {
       client.sendMessage(
         msg.from,
-        "Sorry, I am just a bot, I don't understand your words. Please type `help` for more info."
+        "I am groot. I don't understand your words. Please type `help` for more info."
       );
     }
 
@@ -181,7 +199,7 @@ const createClient = (number, req, res) => {
     console.log("disconnected", e);
   });
 
-  client.initialize();
+  client.initialize().then((x) => console.log("client created", x));
   return client;
 };
 

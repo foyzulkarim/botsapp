@@ -5,6 +5,7 @@ const { MongoError } = require("../../common/errors");
 const schema = new mongoose.Schema(
   {
     number: { type: String, unique: true, required: true },
+    verifyCode: { type: String, required: false },
     isVerified: { type: Boolean, default: false },
     alias: { type: String, unique: true, required: true },
     isConnected: { type: Boolean, default: false },
