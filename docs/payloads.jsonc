@@ -1,0 +1,75 @@
+// message
+[
+  {
+    "message": {
+      "_data": {
+        "id": {
+          "fromMe": false,
+          "remote": "61492142082@c.us",
+          "id": "3ADB61EB2ECCF737F713",
+          "_serialized": "false_61492142082@c.us_3ADB61EB2ECCF737F713"
+        },
+        "body": "Chat",
+        "type": "chat",
+        "t": 1652690301,
+        "notifyName": "Foyzul",
+        "from": "61492142082@c.us",
+        "to": "60149788542@c.us",
+        "self": "in",
+        "ack": 1,
+        "isNewMsg": true,
+        "star": false,
+        "recvFresh": true,
+        "isFromTemplate": false,
+        "broadcast": false,
+        "mentionedJidList": [],
+        "isVcardOverMmsDocument": false,
+        "isForwarded": false,
+        "labels": [],
+        "hasReaction": false,
+        "ephemeralOutOfSync": false,
+        "productHeaderImageRejected": false,
+        "lastPlaybackProgress": 0,
+        "isDynamicReplyButtonsMsg": false,
+        "isMdHistoryMsg": false,
+        "requiresDirectConnection": false,
+        "pttForwardedFeaturesEnabled": true,
+        "isEphemeral": false,
+        "isStatusV3": false,
+        "links": []
+      },
+      "id": {
+        "fromMe": false,
+        "remote": "61492142082@c.us",
+        "id": "3ADB61EB2ECCF737F713",
+        "_serialized": "false_61492142082@c.us_3ADB61EB2ECCF737F713"
+      },
+      "ack": 1,
+      "hasMedia": false,
+      "body": "Chat",
+      "type": "chat",
+      "timestamp": 1652690301,
+      "from": "61492142082@c.us",
+      "to": "60149788542@c.us",
+      "author": undefined,
+      "deviceType": "ios",
+      "isForwarded": false,
+      "forwardingScore": 0,
+      "isStatus": false,
+      "isStarred": false,
+      "broadcast": false,
+      "fromMe": false,
+      "hasQuotedMsg": false,
+      "duration": undefined,
+      "location": undefined,
+      "vCards": [],
+      "inviteV4": undefined,
+      "mentionedIds": [],
+      "orderId": undefined,
+      "token": undefined,
+      "isGif": false,
+      "isEphemeral": false,
+      "links": []
+    }
+  }
+]

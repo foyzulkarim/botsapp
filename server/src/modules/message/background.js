@@ -80,7 +80,7 @@ const parseSms = ({ text, type }) => {
   }
 };
 
-const worker = new Worker(
+const trxQueueWorker = new Worker(
   trxQueueName,
   async (job) => {
     const { _id, text, type } = job.data;
@@ -99,22 +99,21 @@ const worker = new Worker(
   connection
 );
 
-worker.on("completed", async (job) => {
+trxQueueWorker.on("completed", async (job) => {
   console.log(
-    `queue completed job.id ${job.id} of name ${job.name} has processed!`,
-    job.returnvalue
+    `queue completed job.id ${job.id} of name ${job.name} has processed!`
   );
 });
 
-worker.on("failed", (job, err) => {
+trxQueueWorker.on("failed", (job, err) => {
   console.log(`${job.id} has failed with ${err.message}`);
 });
 
-const schedulerWorker = new Worker(
+const trxSchedulerWorker = new Worker(
   trxSchedulerName,
-  async (job) => {
+  async () => {
     const unProcessedList = await dynamicSearch(
-      { isProcessed: false },
+      { isProcessed: false, fromMe: true, isBkash: true },
       ModelName
     );
 
@@ -135,7 +134,7 @@ const schedulerWorker = new Worker(
   connection
 );
 
-schedulerWorker.on("completed", async (job) => {
+trxSchedulerWorker.on("completed", async (job) => {
   console.log(
     `schedulerWorker completed job.id ${job.id} of name ${job.name} has completed!`
   );
@@ -146,23 +145,40 @@ const sendSms = async (smsObj) => {
   // const sms = `${text} from ${sender} at ${date} Tk ${amount} TrxID ${trxId}`;
   // const result = { sms, type };
   const em = getEventEmitterInstance();
+
+  em.on(`sent-msg`, async (responseMessage) => {
+    console.log(
+      `waWorker - ${ModelName} sent-msg-${smsObj._id}`,
+      responseMessage
+    );
+    const dbModel = await searchOne({ _id: smsObj._id }, ModelName);
+    if (dbModel) {
+      dbModel.isSent = true;
+      await update(dbModel, ModelName);
+    }
+  });
+
   em.emit(`send-msg`, smsObj);
-  console.log(`sendSms - ${ModelName} message sent`, smsObj.trxId);
+  console.log(`sendSms - ${ModelName} message sent`, smsObj);
   return true;
 };
 
 const waWorker = new Worker(
   waQueueName,
   async (job) => {
-    const { sender, trxId } = job.data;
-    sendSms({ sender, trxId });
-    const dbModel = await searchOne({ trxId }, ModelName);
-    if (dbModel) {
-      dbModel.isSent = true;
-    }
-    const result = await update(dbModel, ModelName);
-    return result;
-    // return true;
+    console.log(
+      `waWorker - ${ModelName} job.id ${job.id} of name ${job.name}`,
+      job
+    );
+    const { from, to, body, _id } = job.data;
+    sendSms({ from, to, body, _id });
+    // const dbModel = await searchOne({ trxId }, ModelName);
+    // if (dbModel) {
+    //   dbModel.isSent = true;
+    // }
+    // const result = await update(dbModel, ModelName);
+    // return result;
+    return true;
   },
   connection
 );
@@ -180,9 +196,9 @@ waWorker.on("failed", (job, err) => {
 
 const waSchedulerWorker = new Worker(
   waSchedulerName,
-  async (job) => {
+  async () => {
     const unProcessedList = await dynamicSearch(
-      { isProcessed: true, isSent: false },
+      { fromMe: true, isProcessed: true, isSent: false },
       ModelName
     );
     console.log(

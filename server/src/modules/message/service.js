@@ -27,8 +27,11 @@ const getQuery = (payload) => {
 
 const setupEventListeners = async (eventEmitter) => {
   eventEmitter.on(`${modelName}Created`, async (model) => {
-    const result = await queue.add("parse-sms", model);
-    console.log(`${modelName} parse-sms queued`, result.id, result.name);
+    // if (model.isBkash) {
+    //   const result = await queue.add("parse-sms", model);
+    //   console.log(`${modelName} parse-sms queued`, result.id, result.name);
+    // }
+    console.log(`${modelName} created`, model);
   });
   eventEmitter.on(`${modelName}Updated`, (model) => {
     console.log(`${modelName} updated`, model);
@@ -38,12 +41,12 @@ const setupEventListeners = async (eventEmitter) => {
   });
 };
 
-const init = async () => {
+(async () => {
   const em = getEventEmitterInstance();
   // const q = new Queue("transactions");
   await setupEventListeners(em);
   console.log(`${modelName} event listeners setup`);
-};
+})();
 
 module.exports = {
   getQuery,

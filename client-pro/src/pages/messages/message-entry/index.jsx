@@ -23,7 +23,7 @@ const EntryForm = (props) => {
     if (result.data && result.data.length > 0) {
       setPhone(result.data[0]);
       form.setFieldsValue({
-        sender: result.data[0].number
+        from: result.data[0].number
       });
     }
   }
@@ -64,7 +64,7 @@ const EntryForm = (props) => {
           <ProFormText
             width="md"
             label="Sender"
-            name="sender"
+            name="from"
             disabled
             rules={[
               {
@@ -78,7 +78,7 @@ const EntryForm = (props) => {
           <ProFormText
             width="md"
             label="Receiver"
-            name="receiver"
+            name="to"
             rules={[
               {
                 required: true,
@@ -91,7 +91,7 @@ const EntryForm = (props) => {
           <ProFormText
             width="md"
             label="Text"
-            name="text"
+            name="body"
             rules={[
               {
                 required: true,

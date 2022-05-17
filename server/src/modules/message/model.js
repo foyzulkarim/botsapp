@@ -3,10 +3,18 @@ const mongoose = require("mongoose");
 // schema
 const schema = new mongoose.Schema(
   {
-    sender: { type: String, required: true },
-    receiver: { type: String, required: true },
-    isDelivered: { type: Boolean, default: false },
-    text: { type: String, required: true },
+    waId: { type: String, required: false },
+    fromMe: { type: Boolean, default: false },
+    from: { type: String, required: true },
+    to: { type: String, required: true },
+    body: { type: String, required: true },
+    type: { type: String, required: true, default: "chat" },
+    notifyName: { type: String, required: false },
+    isBkash: { type: Boolean, default: false },
+    bkashText: { type: String, required: false },
+    isProcessed: { type: Boolean, required: true, default: false },
+    isSent: { type: Boolean, required: true, default: false },
+    isError: { type: Boolean, required: true, default: false },
     errorMessage: { type: String },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

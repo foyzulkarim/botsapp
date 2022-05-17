@@ -4,7 +4,12 @@ const {
   getInstance: getEventEmitterInstance,
 } = require("../../core/event-manager");
 const { Model, name: modelName } = require("./model");
-const { dynamicSearch, update, searchOne } = require("../../core/repository");
+const {
+  dynamicSearch,
+  update,
+  searchOne,
+  save,
+} = require("../../core/repository");
 
 let eventEmitter;
 const clients = [];
@@ -16,12 +21,12 @@ const createClient = (number, req, res) => {
     }),
     puppeteer: {
       headless: true,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--remote-debugging-port=9222",
-      ],
-      executablePath: "/usr/bin/google-chrome",
+      // args: [
+      //   "--no-sandbox",
+      //   "--disable-setuid-sandbox",
+      //   "--remote-debugging-port=9222",
+      // ],
+      // executablePath: "/usr/bin/google-chrome",
     },
   });
 
@@ -47,22 +52,23 @@ const createClient = (number, req, res) => {
 
   client.on("ready", (x) => {
     console.log("Client is ready!", x);
-    // eventEmitter.on("send-msg", (p) => {
-    //   console.log("send-msg received", p.sender, p.trxId); // 61492142082@c.us
-    //   try {
-    //     client.sendMessage(
-    //       `${p.sender}@c.us`,
-    //       `Thanks for your message. Your transaction ID is ${p.trxId}.`
-    //     );
-    //   } catch (error) {
-    //     console.log("error", error);
-    //   }
-    // });
-    client.sendMessage(`${process.env.SYSTEM_PHONE}@c.us`, "authenticated");
+    eventEmitter.on("send-msg", (smsObj) => {
+      console.log("send-msg received", smsObj); // 61492142082@c.us
+      try {
+        client.sendMessage(smsObj.to, smsObj.body).then((message) => {
+          console.log("message sent", message);
+          eventEmitter.emit(`sent-msg`, { ...smsObj, ...message });
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
+    });
+    // client.sendMessage(`${process.env.SYSTEM_PHONE}@c.us`, "authenticated");
     clients.push(client);
   });
 
   client.on("message", (msg) => {
+    console.log("message", msg);
     if (msg.body === "!ping") {
       msg.reply("pong");
     }
@@ -70,7 +76,7 @@ const createClient = (number, req, res) => {
     let handled = false;
 
     if (msg.body.toLowerCase() === "help") {
-      let reply = "To verify your transaction id, type `Trx` \n";
+      let reply = "To verify your phone number, type `verify` \n";
       reply +=
         "To know more about this chatbot, who built this, how can you get this for yourself, type `Know more`";
       client.sendMessage(msg.from, reply);
@@ -117,6 +123,7 @@ const createClient = (number, req, res) => {
     const greetings = [
       "hi",
       "hello",
+      "yo",
       "hey",
       "hi there",
       "hey there",
@@ -189,7 +196,16 @@ const loadClients = async () => {
     createClient(p.number, null, null);
     // clients.push(client);
   });
-  // createClient(process.env.SYSTEM_PHONE.toString(), null, null);
+  if (phones.length === 0) {
+    console.log("No phones found. setting up system phone");
+    const phone = {
+      number: process.env.SYSTEM_PHONE,
+      isVerified: true,
+      alias: "System",
+    };
+    await save(phone, modelName);
+    createClient(process.env.SYSTEM_PHONE, null, null);
+  }
 };
 
 const setup = async () => {
