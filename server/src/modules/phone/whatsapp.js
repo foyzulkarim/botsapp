@@ -231,7 +231,7 @@ const setup = async () => {
   eventEmitter.on("databaseConnectionEstablished", async () => {
     console.log("whatsapp.js=> databaseConnectionEstablished");
     console.log("whatsapp.js=> loadClients");
-    await loadClients();
+    // await loadClients();
   });
 };
 

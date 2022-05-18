@@ -5,18 +5,19 @@ import {
 } from '@ant-design/pro-form';
 import { useRequest, useModel } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { submitForm, searchPhone } from '../service';
+import { submitForm, searchPhone, getById } from '../service';
 import QRCode from 'qrcode';
 
-const BasicForm = () => {
+const BasicForm = (props) => {
     const { auth } = useModel('getAuthState');
     const [phone, setPhone] = useState(null);
 
     const fetchPhone = async () => {
-        const result = await searchPhone({});
+        const { id } = props.match.params;
+        const result = await getById(id);
         console.log('phones', result);
-        if (result.data && result.data.length > 0) {
-            setPhone(result.data[0].number);
+        if (result && result.number) {
+            setPhone(result.number);
         }
     }
 

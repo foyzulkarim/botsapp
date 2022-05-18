@@ -17,10 +17,12 @@ const {
   save,
 } = require("../../core/repository");
 const { GeneralError } = require("../../common/errors");
-const {
-  createClient: createWaClient,
-  setup: setupWhatsApp,
-} = require("./whatsapp");
+// const {
+//   // createClient: createWaClient,
+//   setup: setupWhatsApp,
+// } = require("./whatsapp");
+
+const { createClient, setup: setupWhatsApp, } = require('./whatsapp2');
 
 const router = express.Router();
 
@@ -38,7 +40,8 @@ const saveHandler = async (req, res, next) => {
   const phoneExists = await checkIfPhoneExists(req.body);
   if (phoneExists) {
     const errorMessage = `Already a phone exists`;
-    return next(new GeneralError(errorMessage));
+    // return next(new GeneralError(errorMessage));
+    console.log('Already phone exists');
   }
   return baseSaveHandler(req, res, next);
 };
@@ -58,7 +61,7 @@ router.get("/activate/:number", async (req, res, next) => {
     const errorMessage = `Verified phone not found`;
     return next(new GeneralError(errorMessage));
   }
-  createWaClient(number, req, res);
+  createClient(number, req, res);
 });
 
 module.exports = router;
