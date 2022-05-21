@@ -1,6 +1,6 @@
 const { ObjectId } = require("mongoose").Types;
 const { name: modelName } = require("./model");
-const { queue, sendMessage } = require("./background");
+const { sendMessage } = require("./background2");
 const {
   getInstance: getEventEmitterInstance,
 } = require("../../core/event-manager");

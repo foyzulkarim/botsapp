@@ -66,7 +66,14 @@ const tryCreateUser = async (user) => {
   if (item) {
     return false;
   }
-  const id = await createUser(user);
+  const superadmin = await getByUsername("superadmin");
+  // user.createdBy = superadmin._id;
+  // user.updatedBy = superadmin._id;
+  const id = await createUser({
+    ...user,
+    createdBy: superadmin._id,
+    updatedBy: superadmin._id,
+  });
   return id;
 };
 

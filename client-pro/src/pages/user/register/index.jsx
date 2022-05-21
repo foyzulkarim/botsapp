@@ -232,7 +232,7 @@ const Register = () => {
                 }
               ]}
             >
-              <Input size="large" placeholder="eg. 01XXXXXXXXX" />
+              <Input size="large" placeholder="eg. 8801XXXXXXXXX" />
             </FormItem>
             <Popover
               getPopupContainer={(node) => {
