@@ -27,3 +27,7 @@ export async function remove(id, options) {
 export async function searchPhone(params) {
   return await post('/api/phones/search', params);
 }
+
+export async function preValidateActivation(id, params) {
+  return await get(`/api/phones/prevalidateactivation/${id}`, params);
+}

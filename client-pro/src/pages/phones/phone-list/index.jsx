@@ -140,6 +140,14 @@ const TableList = () => {
       sorter: true,
     },
     {
+      title: 'Connected',
+      dataIndex: 'isConnected',
+      valueType: 'text',
+      renderText: (val) => {
+        return val ? 'Yes' : 'No';
+      }
+    },
+    {
       title: 'Actions',
       dataIndex: 'option',
       valueType: 'option',

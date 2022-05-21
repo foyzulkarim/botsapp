@@ -3,9 +3,9 @@ import { Card, message } from 'antd';
 import {
     ProFormText,
 } from '@ant-design/pro-form';
-import { useRequest, useModel } from 'umi';
+import { useRequest, useModel, history, useAccess } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { submitForm, searchPhone, getById } from '../service';
+import { submitForm, preValidateActivation, getById } from '../service';
 import QRCode from 'qrcode';
 
 const BasicForm = (props) => {
@@ -14,10 +14,15 @@ const BasicForm = (props) => {
 
     const fetchPhone = async () => {
         const { id } = props.match.params;
-        const result = await getById(id);
+        const result = await preValidateActivation(id);
         console.log('phones', result);
-        if (result && result.number) {
-            setPhone(result.number);
+        if (result instanceof Error) {
+            message.error(result.message);
+            history.push(`/phones`);
+        }
+        else {
+            message.success(result.message);
+            setPhone(result.phone.number);
         }
     }
 
@@ -54,11 +59,13 @@ const BasicForm = (props) => {
                 console.log('success!');
             })
         }
-
+        console.log(result);
         if (result.done) {
             console.log('done');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             setLoading(false);
+            message.success("Phone is connected");
+            history.push(`/phones`);
         }
     };
 

@@ -229,11 +229,7 @@ const Register = () => {
                 {
                   required: true,
                   message: 'Please enter phone number!',
-                },
-                {
-                  pattern: /^01[0-9]{9}$/,
-                  message: 'Malformed phone number!',
-                },
+                }
               ]}
             >
               <Input size="large" placeholder="eg. 01XXXXXXXXX" />

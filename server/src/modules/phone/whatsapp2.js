@@ -1,5 +1,5 @@
 // Supports ES6
-// import { create, Whatsapp } from 'venom-bot';
+const del = require("del");
 const venom = require("venom-bot");
 const {
   getInstance: getEventEmitterInstance,
@@ -10,6 +10,7 @@ const {
   update,
   searchOne,
   save,
+  updateAll,
 } = require("../../core/repository");
 
 let eventEmitter;
@@ -32,17 +33,6 @@ function start(client, number) {
     console.log("message", msg.from, msg.body);
     if (msg.body === "!ping") {
       client.reply(msg.from, "pong", "whatsapp");
-    }
-
-    if (msg.body.toLowerCase() === "hi" && msg.isGroupMsg === false) {
-      client
-        .sendText(msg.from, "Welcome Venom 🕷")
-        .then((result) => {
-          console.log("Result: ", result); // return object success
-        })
-        .catch((erro) => {
-          console.error("Error when sending: ", erro); // return object error
-        });
     }
 
     let handled = false;
@@ -133,9 +123,27 @@ function start(client, number) {
       );
     }
   });
+
+  clients.push(client);
+  searchOne({ number }, modelName).then((phoneModel) => {
+    if (phoneModel) {
+      // eslint-disable-next-line no-param-reassign
+      phoneModel.isConnected = true;
+      update(phoneModel, modelName).then((updatedPhoneModel) => {
+        console.log("phone connected", updatedPhoneModel);
+      });
+    }
+  });
 }
 
 const createClient = async (number, req, res) => {
+  const existingClient = clients.find((c) => c.session === number);
+  if (existingClient) {
+    console.log("existing client", existingClient.session);
+    if (res) {
+      res.end();
+    }
+  }
   console.log("creating client ", number);
   const options = {
     multidevice: true, // for version not multidevice use false.(default: true)
@@ -171,10 +179,27 @@ const createClient = async (number, req, res) => {
     }
   };
 
-  const client = await venom.create(number, qrCatch, null, options, null, null);
+  const statusFind = (status, s) => {
+    console.log("Status: ", status, s);
+    if (status === "qrReadSuccess") {
+      if (res) {
+        res.end();
+      }
+    }
+  };
+
+  const client = await venom.create(
+    number,
+    qrCatch,
+    statusFind,
+    options,
+    null,
+    null
+  );
   const device = await client.getHostDevice();
   console.log("client", device);
   start(client, number);
+  return client;
 };
 
 const createClient2 = (number) => {
@@ -247,14 +272,6 @@ const createClient2 = (number) => {
 const loadClients = async () => {
   const phones = await dynamicSearch({ isVerified: true }, modelName);
   console.log("numbers", phones.length);
-  for (let index = 0; index < phones.length; index++) {
-    const { number } = phones[index];
-    console.log("number", number);
-    if (number === process.env.SYSTEM_PHONE) {
-      console.log("creating client ", number);
-      await createClient(number);
-    }
-  }
 
   if (phones.length === 0) {
     console.log("No phones found. setting up system phone");
@@ -264,7 +281,7 @@ const loadClients = async () => {
       alias: "System",
     };
 
-    const p = save(phone, modelName);
+    await save(phone, modelName);
     await createClient(process.env.SYSTEM_PHONE, null, null);
   }
 };
@@ -293,13 +310,43 @@ const loadClientsPromise = () => {
   });
 };
 
+const resetConnectedPhones = async () => {
+  const phones = await dynamicSearch({ isVerified: true }, modelName);
+  console.log("numbers", phones.length);
+  await updateAll({ isVerified: true }, { isConnected: false }, modelName);
+  const deletedDirectoryPaths = await del([".tokens"]);
+  console.log("deletedDirectoryPaths", deletedDirectoryPaths);
+};
+
 const setup = async () => {
   eventEmitter = getEventEmitterInstance();
   eventEmitter.on("databaseConnectionEstablished", async () => {
     console.log("whatsapp.js=> databaseConnectionEstablished");
     console.log("whatsapp.js=> loadClients");
-    // await loadClients();
+    await resetConnectedPhones();
+  });
+
+  eventEmitter.on("send-msg", (smsObj) => {
+    console.log("send-msg received", smsObj); // 61492142082@c.us
+    try {
+      const { from } = smsObj;
+      const client = clients.find((x) => from.startsWith(x.session));
+      if (client) {
+        client.sendText(smsObj.to, smsObj.body).then((message) => {
+          console.log("message sent", message);
+          eventEmitter.emit(`msg-sent`, { ...smsObj, ...message });
+        });
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   });
 };
 
-module.exports = { createClient, setup };
+const getWhatsAppClientByNumber = (number) => clients.find((x) => x.session === number);
+
+module.exports = {
+  createClient,
+  setup,
+  getWhatsAppClientByNumber,
+};

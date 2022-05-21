@@ -14,6 +14,8 @@ const validate = (data, user) => {
     to: `${data.to}@c.us`,
     body: data.body,
     fromMe: true,
+    fromNumber: data.from,
+    toNumber: data.to,
     isProcessed: true,
     createdBy: user.id,
     updatedBy: user.id,

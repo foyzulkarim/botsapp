@@ -1,6 +1,6 @@
 const { ObjectId } = require("mongoose").Types;
 const { name: modelName } = require("./model");
-const { queue } = require("./background");
+const { queue, sendMessage } = require("./background");
 const {
   getInstance: getEventEmitterInstance,
 } = require("../../core/event-manager");
@@ -27,10 +27,9 @@ const getQuery = (payload) => {
 
 const setupEventListeners = async (eventEmitter) => {
   eventEmitter.on(`${modelName}Created`, async (model) => {
-    // if (model.isBkash) {
-    //   const result = await queue.add("parse-sms", model);
-    //   console.log(`${modelName} parse-sms queued`, result.id, result.name);
-    // }
+    if (model.shouldSend) {
+      await sendMessage(model);
+    }
     console.log(`${modelName} created`, model);
   });
   eventEmitter.on(`${modelName}Updated`, (model) => {

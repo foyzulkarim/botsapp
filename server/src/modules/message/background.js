@@ -140,13 +140,9 @@ trxSchedulerWorker.on("completed", async (job) => {
   );
 });
 
-const sendSms = async (smsObj) => {
-  // const { sender, trxId } = smsObj;
-  // const sms = `${text} from ${sender} at ${date} Tk ${amount} TrxID ${trxId}`;
-  // const result = { sms, type };
+const sendMessage = async (smsObj) => {
   const em = getEventEmitterInstance();
-
-  em.on(`sent-msg`, async (responseMessage) => {
+  em.on(`msg-sent`, async (responseMessage) => {
     console.log(
       `waWorker - ${ModelName} sent-msg-${smsObj._id}`,
       responseMessage
@@ -159,7 +155,7 @@ const sendSms = async (smsObj) => {
   });
 
   em.emit(`send-msg`, smsObj);
-  console.log(`sendSms - ${ModelName} message sent`, smsObj);
+  console.log(`sendMessage - ${ModelName} message sent`, smsObj);
   return true;
 };
 
@@ -171,7 +167,7 @@ const waWorker = new Worker(
       job
     );
     const { from, to, body, _id } = job.data;
-    sendSms({ from, to, body, _id });
+    sendMessage({ from, to, body, _id });
     // const dbModel = await searchOne({ trxId }, ModelName);
     // if (dbModel) {
     //   dbModel.isSent = true;
@@ -198,7 +194,7 @@ const waSchedulerWorker = new Worker(
   waSchedulerName,
   async () => {
     const unProcessedList = await dynamicSearch(
-      { fromMe: true, isProcessed: true, isSent: false },
+      { fromMe: true, isProcessed: true, isSent: false, shouldSend: true },
       ModelName
     );
     console.log(
@@ -256,4 +252,4 @@ if (process.env.BACKGROUND === "true") {
   startScheduler();
 }
 
-module.exports = { queue: trxQueue };
+module.exports = { queue: trxQueue, sendMessage };

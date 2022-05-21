@@ -112,31 +112,28 @@ const TableList = () => {
 
   const columns = [
     {
-      title: 'Sender',
-      dataIndex: 'sender',
+      title: 'From',
+      dataIndex: 'fromNumber',
       sorter: true,
       tip: 'Sender',
-      render: (dom, entity) => {
-        return (
-          <a
-            onClick={() => {
-              history.push(`/messages/edit/${entity._id}`);
-            }}
-          >
-            {dom}
-          </a>
-        );
-      },
     },
     {
-      title: 'Receiver',
-      dataIndex: 'receiver',
+      title: 'To',
+      dataIndex: 'toNumber',
       sorter: true,
     },
     {
       title: 'Text',
-      dataIndex: 'text',
+      dataIndex: 'body',
       sorter: false,
+    },
+    {
+      title: 'Sent',
+      dataIndex: 'isSent',
+      valueType: 'text',
+      render: (text, record) => {
+        return text ? 'Sent' : 'Pending';
+      }
     },
     {
       title: 'Updated At',
@@ -144,14 +141,14 @@ const TableList = () => {
       valueType: 'dateTime',
       sorter: true,
     },
-    {
-      title: 'Actions',
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => [
-        <DeleteButton key="delete" record={record} elementId='messages-list-delete-btn' displayProp='number' remove={remove} reload={setFetchRoles} />,
-      ],
-    },
+    // {
+    //   title: 'Actions',
+    //   dataIndex: 'option',
+    //   valueType: 'option',
+    //   render: (_, record) => [
+    //     <DeleteButton key="delete" record={record} elementId='messages-list-delete-btn' displayProp='number' remove={remove} reload={setFetchRoles} />,
+    //   ],
+    // },
   ];
   return (
     <>

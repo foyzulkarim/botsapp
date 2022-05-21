@@ -14,6 +14,7 @@ const {
   dynamicSearch,
   update,
   searchOne,
+  getById,
   save,
 } = require("../../core/repository");
 const { GeneralError } = require("../../common/errors");
@@ -22,7 +23,7 @@ const { GeneralError } = require("../../common/errors");
 //   setup: setupWhatsApp,
 // } = require("./whatsapp");
 
-const { createClient, setup: setupWhatsApp, } = require('./whatsapp2');
+const { createClient, setup: setupWhatsApp, getWhatsAppClientByNumber } = require("./whatsapp2");
 
 const router = express.Router();
 
@@ -41,7 +42,7 @@ const saveHandler = async (req, res, next) => {
   if (phoneExists) {
     const errorMessage = `Already a phone exists`;
     // return next(new GeneralError(errorMessage));
-    console.log('Already phone exists');
+    console.log("Already phone exists");
   }
   return baseSaveHandler(req, res, next);
 };
@@ -62,6 +63,28 @@ router.get("/activate/:number", async (req, res, next) => {
     return next(new GeneralError(errorMessage));
   }
   createClient(number, req, res);
+});
+router.get("/prevalidateactivation/:id", async (req, res, next) => {
+  const { id } = req.params;
+  const phone = await getById(id, modelName);
+  if (!phone) {
+    const errorMessage = `Phone not found`;
+    return next(new GeneralError(errorMessage));
+  }
+  if (!phone.isVerified) {
+    const errorMessage = `Phone is not verified`;
+    return next(new GeneralError(errorMessage));
+  }
+
+  const client = getWhatsAppClientByNumber(phone.number);
+  if (client) {
+    const errorMessage = `Phone is already activated`;
+    return next(new GeneralError(errorMessage));
+  }
+
+  return res
+    .status(200)
+    .send({ success: true, message: `Phone is ready to be activated`, phone });
 });
 
 module.exports = router;
