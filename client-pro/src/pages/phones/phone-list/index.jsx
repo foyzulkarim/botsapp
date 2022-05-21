@@ -145,9 +145,9 @@ const TableList = () => {
       valueType: 'option',
       render: (_, record) => [
         <DeleteButton key="delete" record={record} elementId='phone-list-delete-btn' displayProp='number' remove={remove} reload={setFetchRoles} />,
-        <a onClick={() => { history.push(`/phones/activate/${record._id}`); }}>
+        (record.isVerified && <a onClick={() => { history.push(`/phones/activate/${record._id}`); }}>
           {'Activate'}
-        </a>
+        </a>)
       ],
     },
   ];
