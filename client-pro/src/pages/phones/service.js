@@ -29,5 +29,5 @@ export async function searchPhone(params) {
 }
 
 export async function preValidateActivation(id, params) {
-  return await get(`/api/phones/prevalidateactivation/${id}`, params);
+  return await get(`/api/phones/prevalidateactivation?id=${id}`, params);
 }

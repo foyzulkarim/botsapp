@@ -47,25 +47,18 @@ const saveHandler = async (req, res, next) => {
   return baseSaveHandler(req, res, next);
 };
 
-setupWhatsApp();
-
-router.get("/detail", getByIdHandler);
-router.post("/create", handleValidation(validate), saveHandler);
-router.put("/update", handleValidation(validate), updateHandler);
-router.post("/search", searchHandler);
-router.post("/count", countHandler);
-router.delete("/delete", deleteHandler);
-router.get("/activate/:number", async (req, res, next) => {
-  const { number } = req.params;
+const phoneActivateHandler = async (req, res, next) => {
+  const { number } = req.query;
   const phone = await searchOne({ number, isVerified: true }, modelName);
   if (!phone) {
     const errorMessage = `Verified phone not found`;
     return next(new GeneralError(errorMessage));
   }
   createClient(number, req, res);
-});
-router.get("/prevalidateactivation/:id", async (req, res, next) => {
-  const { id } = req.params;
+};
+
+const preValidateHandler = async (req, res, next) => {
+  const { id } = req.query;
   const phone = await getById(id, modelName);
   if (!phone) {
     const errorMessage = `Phone not found`;
@@ -85,6 +78,17 @@ router.get("/prevalidateactivation/:id", async (req, res, next) => {
   return res
     .status(200)
     .send({ success: true, message: `Phone is ready to be activated`, phone });
-});
+};
+
+setupWhatsApp();
+
+router.get("/detail", getByIdHandler);
+router.post("/create", handleValidation(validate), saveHandler);
+router.put("/update", handleValidation(validate), updateHandler);
+router.post("/search", searchHandler);
+router.post("/count", countHandler);
+router.delete("/delete", deleteHandler);
+router.get("/activate", phoneActivateHandler);
+router.get("/prevalidateactivation", preValidateHandler);
 
 module.exports = router;

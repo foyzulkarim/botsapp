@@ -43,7 +43,7 @@ const BasicForm = (props) => {
                 'Authorization': `Bearer ${auth.token}`,
             }
         }
-        let res = await fetch(`${API_URL}/api/phones/activate/${phone}`, obj);
+        let res = await fetch(`${API_URL}/api/phones/activate?number=${phone}`, obj);
         let reader = res.body.getReader();
         let result;
         let decoder = new TextDecoder('utf8');
