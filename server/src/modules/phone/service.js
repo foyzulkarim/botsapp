@@ -28,7 +28,7 @@ const getQuery = (payload) => {
 const checkIfPhoneExists = async (payload) => {
   const { createdBy } = payload;
   const result = await dynamicSearch({ createdBy }, modelName);
-  return result.length > 0;
+  return result.length > 1;
 };
 
 const setupEventListeners = async (eventEmitter) => {

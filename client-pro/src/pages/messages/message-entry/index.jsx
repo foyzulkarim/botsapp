@@ -20,26 +20,17 @@ const EntryForm = (props) => {
   const [phone, setPhone] = useState('');
   const [recipient, setRecipient] = useState(null);
 
-  const fetchPhone = async () => {
-    const result = await searchPhone({});
-    console.log('phones', result);
-    if (result.data && result.data.length > 0) {
-      setPhone(result.data[0]);
-      form.setFieldsValue({
-        from: result.data[0].number
-      });
-    }
-  }
+  const fetchPhones = async () => {
+    const result = await searchPhone();
+    const options = result.data.map(r => ({ label: r.alias, value: r._id, data: r }));
+    return options;
+  };
 
   const fetchRecipients = async () => {
     const result = await searchRecipients();
     const options = result.data.map(r => ({ label: r.name, value: r._id, data: r }));
     return options;
   };
-
-  useEffect(() => {
-    fetchPhone();
-  }, []);
 
   const onFinish = async (values) => {
     console.log(values, form);
@@ -71,6 +62,20 @@ const EntryForm = (props) => {
           form={form}
         >
           <Title level={2} type="warning">You can send 50 message in 24 hours in this hosted demo.</Title>
+          <ProFormSelect
+            width="md"
+            name="phoneId"
+            label="Phone"
+            request={fetchPhones}
+            placeholder="Please select a phone"
+            rules={[{ required: true, message: 'Please select phone' }]}
+            onChange={(value, e) => {
+              setRecipient({ ...e.data });
+              form.setFieldsValue({
+                from: e.data.number
+              });
+            }}
+          />
           <ProFormText
             width="md"
             label="Sender"

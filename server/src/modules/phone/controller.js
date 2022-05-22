@@ -42,9 +42,9 @@ const countHandler = async (req, res, next) => {
 };
 
 const saveHandler = async (req, res, next) => {
-  const phoneExists = await checkIfPhoneExists(req.body);
-  if (phoneExists) {
-    const errorMessage = `Already a phone exists. Max phone allowed on demo is 1`;
+  const maxPhoneExists = await checkIfPhoneExists(req.body);
+  if (maxPhoneExists) {
+    const errorMessage = `Already max phone exists.`;
     return next(new GeneralError(errorMessage));
   }
   return baseSaveHandler(req, res, next);
