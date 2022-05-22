@@ -9,7 +9,7 @@ const Settings = {
   colorWeak: false,
   title: 'BizBook365 - WABot',
   pwa: false,
-  logo: '',
+  logo: '/bwabot.gif',
   iconfontUrl: '',
 };
 export default Settings;
