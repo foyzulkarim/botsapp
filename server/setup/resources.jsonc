@@ -264,7 +264,7 @@
     "type": "api"
   },
 
-  // Phones api 
+  // Phones api
 
   // default
   {
@@ -377,6 +377,57 @@
   {
     "name": "/api/messages/delete",
     "alias": "Messages delete API",
+    "type": "api"
+  },
+
+  // Botengine API
+
+  // default
+  {
+    "name": "/api/botengines",
+    "alias": "Botengine API",
+    "type": "api"
+  },
+
+  // detail
+  {
+    "name": "/api/botengines/detail",
+    "alias": "Botengine detail API",
+    "type": "api"
+  },
+
+  // create
+  {
+    "name": "/api/botengines/create",
+    "alias": "Botengine create API",
+    "type": "api"
+  },
+
+  // update
+  {
+    "name": "/api/botengines/update",
+    "alias": "Botengine update API",
+    "type": "api"
+  },
+
+  // search
+  {
+    "name": "/api/botengines/search",
+    "alias": "Botengine search API",
+    "type": "api"
+  },
+
+  // count
+  {
+    "name": "/api/botengines/count",
+    "alias": "Botengine count API",
+    "type": "api"
+  },
+
+  // delete
+  {
+    "name": "/api/botengines/delete",
+    "alias": "Botengine delete API",
     "type": "api"
   },
 

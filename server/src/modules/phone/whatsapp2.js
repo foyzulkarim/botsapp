@@ -29,6 +29,7 @@ function start(client, number) {
       });
     });
   }
+
   client.onMessage((msg) => {
     console.log("message", msg.from, msg.body);
     if (msg.body === "!ping") {
@@ -70,8 +71,8 @@ function start(client, number) {
     }
 
     if (
-      msg.body.toLowerCase() === "help" ||
-      msg.body.toLowerCase() === "`help`"
+      msg.body.toLowerCase() === "sos" ||
+      msg.body.toLowerCase() === "`sos`"
     ) {
       let reply1 =
         "The receiver didn't setup the bot properly. Please contact the system administrator or type `know more`.";
@@ -90,36 +91,28 @@ function start(client, number) {
       handled = true;
     }
 
-    const greetings = [
-      "hi",
-      "hello",
-      "yo",
-      "hey",
-      "hi there",
-      "hey there",
-      "assalamu alaikum",
-      "salam",
-    ];
-    if (greetings.includes(msg.body.toLowerCase())) {
-      client.sendText(
-        msg.from,
-        "Hey there! \n How can I help you? \n Type `help` for more info."
-      );
-      handled = true;
-    }
-
     if (
       msg === "authenticated" ||
       msg ===
-        "I am groot. I don't understand your words. Please type `help` for more info."
+      "I am groot. I don't understand your words. Please type `sos` for more info."
     ) {
       handled = true;
     }
 
     if (!handled) {
-      client.sendText(
-        msg.from,
-        "I am groot. I don't understand your words. Please type `help` for more info."
+      const toNumber = msg.to.replace("@c.us", "");
+      searchOne({ number: toNumber, requestText: msg.body }, "Botengine").then(
+        (responseText) => {
+          if (responseText) {
+            client.sendText(msg.from, responseText.responseText);
+            handled = true;
+          } else {
+            client.sendText(
+              msg.from,
+              "I am groot. I don't understand your words. Please type `sos` for more info."
+            );
+          }
+        }
       );
     }
   });

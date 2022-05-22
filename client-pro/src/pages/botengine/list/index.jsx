@@ -3,51 +3,8 @@ import { Button, message, Pagination, Form, Row, Col, Input, DatePicker, Modal }
 import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer, } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { history, useAccess } from 'umi';
+import { history } from 'umi';
 import { count, search, remove } from '../service';
-
-const DeleteButton = (props) => {
-
-  const { confirm } = Modal;
-  const { record, displayProp, elementId, remove: deleteItem, reload } = props;
-
-  const showDeleteConfirm = (item, displayProp) => {
-    confirm({
-      title: `Do you Want to delete ${item[displayProp]}?`,
-      icon: <ExclamationCircleOutlined />,
-      content: `${item[displayProp]} will be deleted permanently.`,
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-      onOk: async () => {
-        console.log('OK');
-        const r = await deleteItem(item._id);
-        if (r.success) {
-          message.success(r.message);
-          reload(true);
-        }
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
-  };
-
-  const access = useAccess();
-  const isVisible = true; // access.canShow(elementId)
-  if (isVisible) {
-    const isDisabled = access.isDisabled(elementId);
-    return isDisabled ? <span>Delete</span> : <a
-      key="config"
-      onClick={() => {
-        showDeleteConfirm(record, displayProp);
-      }}
-    >
-      Delete
-    </a>;
-  }
-  return null;
-}
 
 
 const TableList = () => {
@@ -57,16 +14,16 @@ const TableList = () => {
   const [searchObject, setSearchObject] = useState({});
   const [sort, setSort] = useState({});
   const [total, setTotal] = useState(0);
-  const [fetchRoles, setFetchRoles] = useState(false);
+  const [fetchResources, setFetchResources] = useState(false);
+  const { confirm } = Modal;
 
-  const fetchRoleData = async () => {
-    console.log('REACT_APP_DEFAULT_PAGE_SIZE', DEFAULT_PAGE_SIZE);
+  const fetchResourceData = async () => {
     const hide = message.loading('Loading...');
     try {
-      const result = await search({ current: current, pageSize: 10, ...sort, ...searchObject });
+      const result = await search({ current: current, pageSize: 10, ...searchObject, ...sort });
       hide();
       setData(result);
-      setFetchRoles(false);
+      setFetchResources(false);
       return result;
     } catch (error) {
       hide();
@@ -78,29 +35,51 @@ const TableList = () => {
     }
   };
 
-  const fetchRoleCount = async () => {
+  const showDeleteConfirm = (item) => {
+    confirm({
+      title: `Do you Want to delete ${item.name}?`,
+      icon: <ExclamationCircleOutlined />,
+      content: `${item.name} will be deleted permanently.`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: async () => {
+        console.log('OK');
+        const r = await remove(item._id);
+        if (r.success) {
+          message.success(r.message);
+          setFetchResources(true);
+        }
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+
+  const fetchResourceCount = async () => {
     const result = await count({ ...searchObject });
     setTotal(result.total);
   };
 
   useEffect(() => {
-    if (fetchRoles) {
-      fetchRoleData();
+    if (fetchResources) {
+      fetchResourceData();
     }
-  }, [fetchRoles]);
+  }, [fetchResources]);
 
   useEffect(() => {
-    setFetchRoles(true);
+    setFetchResources(true);
   }, [current, sort]);
 
   useEffect(() => {
-    fetchRoleCount();
-    setFetchRoles(true);
+    fetchResourceCount();
+    setFetchResources(true);
   }, []);
 
   useEffect(() => {
-    fetchRoleCount();
-    setFetchRoles(true);
+    fetchResourceCount();
+    setFetchResources(true);
   }, [searchObject]);
 
   const [form] = Form.useForm();
@@ -112,15 +91,15 @@ const TableList = () => {
 
   const columns = [
     {
-      title: 'Number',
-      dataIndex: 'number',
+      title: 'Request',
+      dataIndex: 'requestText',
       sorter: true,
-      tip: 'Phone number',
+      tip: 'Request',
       render: (dom, entity) => {
         return (
           <a
             onClick={() => {
-              history.push(`/phones/edit/${entity._id}`);
+              history.push(`/resources/edit/${entity._id}`);
             }}
           >
             {dom}
@@ -129,10 +108,9 @@ const TableList = () => {
       },
     },
     {
-      title: 'Alias',
-      dataIndex: 'alias',
-      sorter: true,
-    },
+      title: 'Response',
+      dataIndex: 'responseText',
+    },    
     {
       title: 'Updated At',
       dataIndex: 'updatedAt',
@@ -140,25 +118,18 @@ const TableList = () => {
       sorter: true,
     },
     {
-      title: 'Connected',
-      dataIndex: 'isConnected',
-      valueType: 'text',
-      renderText: (val) => {
-        return val ? 'Yes' : 'No';
-      }
-    },
-    {
       title: 'Actions',
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <DeleteButton key="delete" record={record} elementId='phone-list-delete-btn' displayProp='number' remove={remove} reload={setFetchRoles} />,
-        (record.isVerified && <a onClick={() => { history.push(`/phones/activate/${record._id}`); }}>
-          {'Connect'}
-        </a>),
-        <a onClick={() => { history.push(`/botengine/new`); }}>
-          {'Bot'}
-        </a>
+        <a
+          key="config"
+          onClick={() => {
+            showDeleteConfirm(record);
+          }}
+        >
+          Delete
+        </a>,
       ],
     },
   ];
@@ -172,37 +143,38 @@ const TableList = () => {
           onFinish={onFinish}
           style={{ display: 'flex', 'align-items': 'left', background: 'white', padding: '10px' }}
         >
-          <Row gutter={16}>
-            <Col flex={6} key={'name'}>
+          <Row gutter={4} style={{ width: '50%' }}>
+            <Col flex={16} key={'name'}>
               <Form.Item
-                name={`text`}
-                label={`Search text`}
+                name={`name`}
+                label={`Name`}
               >
-                <Input placeholder="Search text for number or alias" />
+                <Input placeholder="Search keyword for name or alias" />
               </Form.Item>
             </Col>
-            <Col flex={6}>
+            <Col flex={8}>
               <Button type="primary" htmlType="submit">
                 Search
               </Button>
-              <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); onFinish({}); }}>
+              <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); 
+              onFinish({}); }}>
                 Clear
               </Button>
             </Col>
           </Row>
         </Form>
         <ProTable
-          headerTitle="Numbers"
+          headerTitle="Resources"
           actionRef={actionRef}
           rowKey="_id"
           search={false}
-          options={{ reload: true }}
+          options={{ reload: false }}
           toolBarRender={() => [
             <Button
               type="primary"
               key="primary"
               onClick={() => {
-                history.push('/numbers/new');
+                history.push('/resources/new');
               }}
             >
               <PlusOutlined /> New
@@ -229,7 +201,7 @@ const TableList = () => {
         showQuickJumper={false}
         showTotal={total => `Total ${total} items`}
         defaultCurrent={current}
-        onChange={(page) => { setCurrent(page); setFetchRoles(true); }}
+        onChange={(page) => { setCurrent(page); setFetchResources(true); }}
         style={{ display: 'flex', 'justify-content': 'center', 'align-items': 'center', background: 'white', padding: '10px' }}
       />
     </>

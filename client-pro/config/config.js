@@ -312,6 +312,37 @@ export default defineConfig({
       ],
     },
     {
+      //access: 'canAccess',
+      path: '/botengine',
+      icon: 'form',
+      name: 'Botengine',
+      routes: [
+        {
+          path: '/botengine',
+          redirect: '/botengine/list',
+        },
+        {
+          name: 'List',
+          icon: 'smile',
+          path: '/botengine/list',
+          component: './botengine/list',
+        },
+        {
+          name: 'New',
+          icon: 'smile',
+          path: '/botengine/new',
+          component: './botengine/entry',
+        },
+        {
+          name: 'Update',
+          hideInMenu: true,
+          icon: 'smile',
+          path: '/botengine/edit/:id',
+          component: './botengine/update',
+        },
+      ],
+    },
+    {
       path: '/form',
       icon: 'form',
       name: 'form',
