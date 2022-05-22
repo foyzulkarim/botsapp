@@ -1,6 +1,6 @@
 export default {
   'pages.layouts.userLayout.title':
-    'A complete MERN boilerplate using all production best practices',
+    'A BizBook365 - WhatsApp Bot',
   'pages.login.accountLogin.tab': 'Account Login',
   'pages.login.accountLogin.errorMessage': 'Incorrect username/password(admin/ant.design)',
   'pages.login.failure': 'Login failed, please try again!',
