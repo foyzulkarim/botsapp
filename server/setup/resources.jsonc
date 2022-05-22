@@ -380,6 +380,13 @@
     "type": "api"
   },
 
+  // analysis
+  {
+    "name": "/api/messages/analysis",
+    "alias": "Messages analysis API",
+    "type": "api"
+  },
+
   // Botengine API
 
   // default

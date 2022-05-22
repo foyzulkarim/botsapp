@@ -32,11 +32,29 @@ const saveHandler = async (req, res, next) => {
   return baseSaveHandler(req, res, next);
 };
 
+const searchAnalysisHandler = async (req, res, next) =>
+  res.status(200).send({
+    success: true,
+    data: {
+      totalBotMessage: 100,
+      totalMessageSent: 200,
+      recentMessages: [
+        {
+          from: "123",
+          to: "456",
+          body: "Hello",
+          createdAt: new Date(),
+        },
+      ],
+    },
+  });
+
 router.get("/detail", getByIdHandler);
 router.post("/create", handleValidation(validate), saveHandler);
 router.put("/update", handleValidation(validate), updateHandler);
 router.post("/search", searchHandler);
 router.post("/count", countHandler);
 router.delete("/delete", deleteHandler);
+router.post("/analysis", searchAnalysisHandler);
 
 module.exports = router;
