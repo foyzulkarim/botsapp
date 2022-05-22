@@ -6,6 +6,7 @@ const { migrate: userMigrate } = require("./users");
 const { migrate: resourceMigrate } = require("./resources");
 const { migrate: roleMigrate } = require("./roles");
 const { migrate: permissionMigrate } = require("./permissions");
+const { migrate: phoneMigrate } = require("./phones");
 
 logger.info("Migration starting");
 const isMongoDbUrl = JSON.parse(
@@ -24,6 +25,7 @@ const migrate = async () => {
   await resourceMigrate(logger);
   await roleMigrate(logger);
   await permissionMigrate(logger);
+  await phoneMigrate(logger);
   logger.info(`Migration finished`);
   process.exit(0);
 };

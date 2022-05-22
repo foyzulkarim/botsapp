@@ -31,8 +31,8 @@ const Forgotpassword = () => {
             <div className={styles.top}>
                 <div className={styles.header}>
                     <Link to="/">
-                        <img alt="logo" className={styles.logo} src="/logo.svg" />
-                        <span className={styles.title}>Ant Design</span>
+                        <img alt="logo" className={styles.logo} src="/bwabot.svg" />
+                        <span className={styles.title}>BizBook365 - WhatsApp Bot</span>
                     </Link>
                 </div>
                 <div className={styles.desc}>

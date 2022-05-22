@@ -164,8 +164,8 @@ const Register = () => {
         <div className={styles.top}>
           <div className={styles.header}>
             <Link to="/">
-              <img alt="logo" className={styles.logo} src="/logo.svg" />
-              <span className={styles.title}>Register</span>
+              <img alt="logo" className={styles.logo} src="/bwabot.svg" />
+              <span className={styles.title}>BizBook365 - WhatsApp Bot</span>
             </Link>
           </div>
           <div className={styles.desc}>
@@ -229,14 +229,10 @@ const Register = () => {
                 {
                   required: true,
                   message: 'Please enter phone number!',
-                },
-                {
-                  pattern: /^01[0-9]{9}$/,
-                  message: 'Malformed phone number!',
-                },
+                }
               ]}
             >
-              <Input size="large" placeholder="eg. 01XXXXXXXXX" />
+              <Input size="large" placeholder="eg. 8801XXXXXXXXX" />
             </FormItem>
             <Popover
               getPopupContainer={(node) => {

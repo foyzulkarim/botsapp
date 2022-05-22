@@ -96,7 +96,7 @@ const loginHandler = async (req, res) => {
         sessionId: uuidv4(),
         accessToken: token,
         userInfo: {
-          name: "Serati Ma",
+          name: `${user.firstName} ${user.lastName}`,
           avatar:
             "https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png",
           userid: "00000001",

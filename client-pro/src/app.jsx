@@ -29,7 +29,7 @@ export async function getInitialState() {
       currentUser: auth?.userInfo,
       permissions: auth?.permissions,
       settings: {
-        title: 'my amazing title',
+        title: 'BizBook365 - WhatsApp Bot',
         now: new Date().toLocaleString(),
       },
     };

@@ -9,48 +9,24 @@ import styles from '../style.less';
 
 const columns = [
   {
-    title: '排名',
-    dataIndex: 'index',
-    key: 'index',
+    title: 'Sender',
+    dataIndex: 'from',
   },
   {
-    title: '搜索关键词',
-    dataIndex: 'keyword',
-    key: 'keyword',
-    render: (text) => <a href="/">{text}</a>,
+    title: 'Receiver',
+    dataIndex: 'to',
   },
   {
-    title: '用户数',
-    dataIndex: 'count',
-    key: 'count',
-    sorter: (a, b) => a.count - b.count,
-    className: styles.alignRight,
-  },
-  {
-    title: '周涨幅',
-    dataIndex: 'range',
-    key: 'range',
-    sorter: (a, b) => a.range - b.range,
-    render: (text, record) => (
-      <Trend flag={record.status === 1 ? 'down' : 'up'}>
-        <span
-          style={{
-            marginRight: 4,
-          }}
-        >
-          {text}%
-        </span>
-      </Trend>
-    ),
+    title: 'Text',
+    dataIndex: 'body',
   },
 ];
 
-const TopSearch = ({ loading, visitData2, searchData, dropdownGroup }) => (
+const TopSearch = ({ loading, visitData2, searchData, messageInfo }) => (
   <Card
     loading={loading}
     bordered={false}
-    title="线上热门搜索"
-    extra={dropdownGroup}
+    title="Message summary"
     style={{
       height: '100%',
     }}
@@ -66,20 +42,11 @@ const TopSearch = ({ loading, visitData2, searchData, dropdownGroup }) => (
         <NumberInfo
           subTitle={
             <span>
-              搜索用户数
-              <Tooltip title="指标说明">
-                <InfoCircleOutlined
-                  style={{
-                    marginLeft: 8,
-                  }}
-                />
-              </Tooltip>
+              Bot messages sent
             </span>
           }
           gap={8}
-          total={numeral(12321).format('0,0')}
-          status="up"
-          subTotal={17.1}
+          total={numeral(messageInfo.totalBotMessage).format('0,0')}
         />
         <TinyArea xField="x" height={45} forceFit yField="y" smooth data={visitData2} />
       </Col>
@@ -93,19 +60,10 @@ const TopSearch = ({ loading, visitData2, searchData, dropdownGroup }) => (
         <NumberInfo
           subTitle={
             <span>
-              人均搜索次数
-              <Tooltip title="指标说明">
-                <InfoCircleOutlined
-                  style={{
-                    marginLeft: 8,
-                  }}
-                />
-              </Tooltip>
+              Total chat message sent
             </span>
           }
-          total={2.7}
-          status="down"
-          subTotal={26.2}
+          total={numeral(messageInfo.totalMessageSent).format('0,0')}
           gap={8}
         />
         <TinyArea xField="x" height={45} forceFit yField="y" smooth data={visitData2} />
@@ -115,13 +73,9 @@ const TopSearch = ({ loading, visitData2, searchData, dropdownGroup }) => (
       rowKey={(record) => record.index}
       size="small"
       columns={columns}
-      dataSource={searchData}
-      pagination={{
-        style: {
-          marginBottom: 0,
-        },
-        pageSize: 5,
-      }}
+      dataSource={messageInfo.recentMessages}
+      rowSelection={false}
+      pagination={false}
     />
   </Card>
 );

@@ -264,6 +264,231 @@
     "type": "api"
   },
 
+  // Phones api
+
+  // default
+  {
+    "name": "/api/phones",
+    "alias": "Phones API",
+    "type": "api"
+  },
+
+  // detail
+  {
+    "name": "/api/phones/detail",
+    "alias": "Phones detail API",
+    "type": "api"
+  },
+
+  // create
+  {
+    "name": "/api/phones/create",
+    "alias": "Phones create API",
+    "type": "api"
+  },
+
+  // update
+  {
+    "name": "/api/phones/update",
+    "alias": "Phones update API",
+    "type": "api"
+  },
+
+  // search
+  {
+    "name": "/api/phones/search",
+    "alias": "Phones search API",
+    "type": "api"
+  },
+
+  // count
+  {
+    "name": "/api/phones/count",
+    "alias": "Phones count API",
+    "type": "api"
+  },
+
+  // delete
+  {
+    "name": "/api/phones/delete",
+    "alias": "Phones delete API",
+    "type": "api"
+  },
+
+  // activate
+  {
+    "name": "/api/phones/activate",
+    "alias": "Phones activate API",
+    "type": "api"
+  },
+
+  // prevalidateactivation
+  {
+    "name": "/api/phones/prevalidateactivation",
+    "alias": "Phones prevalidateactivation API",
+    "type": "api"
+  },
+
+  // Message API
+
+  // default
+  {
+    "name": "/api/messages",
+    "alias": "Messages API",
+    "type": "api"
+  },
+
+  // detail
+  {
+    "name": "/api/messages/detail",
+    "alias": "Messages detail API",
+    "type": "api"
+  },
+
+  // create
+  {
+    "name": "/api/messages/create",
+    "alias": "Messages create API",
+    "type": "api"
+  },
+
+  // update
+  {
+    "name": "/api/messages/update",
+    "alias": "Messages update API",
+    "type": "api"
+  },
+
+  // search
+  {
+    "name": "/api/messages/search",
+    "alias": "Messages search API",
+    "type": "api"
+  },
+
+  // count
+  {
+    "name": "/api/messages/count",
+    "alias": "Messages count API",
+    "type": "api"
+  },
+
+  // delete
+  {
+    "name": "/api/messages/delete",
+    "alias": "Messages delete API",
+    "type": "api"
+  },
+
+  // analysis
+  {
+    "name": "/api/messages/analysis",
+    "alias": "Messages analysis API",
+    "type": "api"
+  },
+
+  // Botengine API
+
+  // default
+  {
+    "name": "/api/botengines",
+    "alias": "Botengine API",
+    "type": "api"
+  },
+
+  // detail
+  {
+    "name": "/api/botengines/detail",
+    "alias": "Botengine detail API",
+    "type": "api"
+  },
+
+  // create
+  {
+    "name": "/api/botengines/create",
+    "alias": "Botengine create API",
+    "type": "api"
+  },
+
+  // update
+  {
+    "name": "/api/botengines/update",
+    "alias": "Botengine update API",
+    "type": "api"
+  },
+
+  // search
+  {
+    "name": "/api/botengines/search",
+    "alias": "Botengine search API",
+    "type": "api"
+  },
+
+  // count
+  {
+    "name": "/api/botengines/count",
+    "alias": "Botengine count API",
+    "type": "api"
+  },
+
+  // delete
+  {
+    "name": "/api/botengines/delete",
+    "alias": "Botengine delete API",
+    "type": "api"
+  },
+
+  // Recipients API
+
+  // default
+  {
+    "name": "/api/recipients",
+    "alias": "Recipients API",
+    "type": "api"
+  },
+
+  // detail
+  {
+    "name": "/api/recipients/detail",
+    "alias": "Recipients detail API",
+    "type": "api"
+  },
+
+  // create
+  {
+    "name": "/api/recipients/create",
+    "alias": "Recipients create API",
+    "type": "api"
+  },
+
+  // update
+  {
+    "name": "/api/recipients/update",
+    "alias": "Recipients update API",
+    "type": "api"
+  },
+
+  // search
+  {
+    "name": "/api/recipients/search",
+    "alias": "Recipients search API",
+    "type": "api"
+  },
+
+  // count
+  {
+    "name": "/api/recipients/count",
+    "alias": "Recipients count API",
+    "type": "api"
+  },
+
+  // delete
+  {
+    "name": "/api/recipients/delete",
+    "alias": "Recipients delete API",
+    "type": "api"
+  },
+
   // Client
 
   // Products
