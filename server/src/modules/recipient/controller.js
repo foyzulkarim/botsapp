@@ -1,5 +1,5 @@
 const express = require("express");
-const { getQuery, checkIfValidToSave } = require("./service");
+const { getQuery, checkIfAllowed } = require("./service");
 const {
   getByIdHandler,
   saveHandler: baseSaveHandler,
@@ -25,9 +25,10 @@ const countHandler = async (req, res, next) => {
 };
 
 const saveHandler = async (req, res, next) => {
-  const canProceed = await checkIfValidToSave(req.body);
-  if (canProceed instanceof Error) {
-    return next(canProceed);
+  const allowed = await checkIfAllowed(req.body);
+  if (!allowed) {
+    const errorMessage = `New recipient not allowed. Max recipient allowed on demo is 3`;
+    return next(new GeneralError(errorMessage));
   }
   return baseSaveHandler(req, res, next);
 };

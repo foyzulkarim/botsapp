@@ -23,7 +23,11 @@ const { GeneralError } = require("../../common/errors");
 //   setup: setupWhatsApp,
 // } = require("./whatsapp");
 
-const { createClient, setup: setupWhatsApp, getWhatsAppClientByNumber } = require("./whatsapp2");
+const {
+  createClient,
+  setup: setupWhatsApp,
+  getWhatsAppClientByNumber,
+} = require("./whatsapp2");
 
 const router = express.Router();
 

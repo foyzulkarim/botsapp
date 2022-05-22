@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Card, message, Typography } from 'antd';
 import ProForm, {
   ProFormDatePicker,
@@ -7,6 +7,7 @@ import ProForm, {
   ProFormText,
   ProFormTextArea,
   ProFormCheckbox,
+  ProFormSelect,
 } from '@ant-design/pro-form';
 import { useRequest } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -19,8 +20,7 @@ const EntryForm = (props) => {
   const onFinish = async (values) => {
     console.log(values, form);
     const result = await save(values);
-    console.log(result);
-
+    console.log('resource', result);
     if (result instanceof Error) {
       message.error(result.message);
     }
@@ -31,7 +31,7 @@ const EntryForm = (props) => {
   };
 
   return (
-    <PageContainer content="My amazing role entry form">
+    <PageContainer content="My amazing entry form">
       <Card bordered={false}>
         <ProForm
           hideRequiredMark
@@ -45,31 +45,24 @@ const EntryForm = (props) => {
           onFinish={(v) => onFinish(v)}
           form={form}
         >
-          <Typography.Title level={2} type="warning">You can add only 2 numbers to connect in this hosted demo. You should add your numbers to test appropriately.</Typography.Title>
+          <Typography.Title level={2} type="warning">You can add only 5 recipient numbers in this hosted demo. You should add your known numbers only to test appropriately.</Typography.Title>
           <ProFormText
             width="md"
-            label="Number"
+            label="Phone number"
             name="number"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter number',
-              },
-            ]}
-            placeholder="Please enter number"
+            placeholder="Phone number with country code eg. 8801xxxxxxxxx"
           />
-
           <ProFormText
             width="md"
-            label="Alias"
-            name="alias"
+            label="Name"
+            name="name"
             rules={[
               {
                 required: true,
-                message: 'Please enter the alias',
+                message: 'Please enter the user name',
               },
             ]}
-            placeholder="Please enter role alias"
+            placeholder="Please enter user name"
           />
         </ProForm>
       </Card>

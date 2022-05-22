@@ -4,6 +4,8 @@ const { sendMessage } = require("./background2");
 const {
   getInstance: getEventEmitterInstance,
 } = require("../../core/event-manager");
+const { dynamicSearch, count } = require("../../core/repository");
+const { GeneralError } = require("../../common/errors");
 
 const getQuery = (payload) => {
   const createdBySubQuery = { createdBy: ObjectId(payload.userId) };
@@ -23,6 +25,28 @@ const getQuery = (payload) => {
     };
   }
   return query;
+};
+
+const checkIfValidToSave = async (payload) => {
+  const recipient = await dynamicSearch(
+    { number: payload.toNumber, createdBy: payload.createdBy },
+    "Recipient"
+  );
+  if (!recipient) {
+    const errorMessage = `Recipient not found`;
+    return new GeneralError(errorMessage);
+  }
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  const c = await count(
+    { createdBy: payload.createdBy, createdAt: { $gt: d } },
+    modelName
+  );
+  if (c > 50) {
+    const errorMessage = `You have reached the maximum allowed messages`;
+    return new GeneralError(errorMessage);
+  }
+  return true;
 };
 
 const setupEventListeners = async (eventEmitter) => {
@@ -50,4 +74,5 @@ const setupEventListeners = async (eventEmitter) => {
 module.exports = {
   getQuery,
   modelName,
+  checkIfValidToSave,
 };

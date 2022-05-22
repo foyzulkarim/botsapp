@@ -431,6 +431,57 @@
     "type": "api"
   },
 
+  // Recipients API
+
+  // default
+  {
+    "name": "/api/recipients",
+    "alias": "Recipients API",
+    "type": "api"
+  },
+
+  // detail
+  {
+    "name": "/api/recipients/detail",
+    "alias": "Recipients detail API",
+    "type": "api"
+  },
+
+  // create
+  {
+    "name": "/api/recipients/create",
+    "alias": "Recipients create API",
+    "type": "api"
+  },
+
+  // update
+  {
+    "name": "/api/recipients/update",
+    "alias": "Recipients update API",
+    "type": "api"
+  },
+
+  // search
+  {
+    "name": "/api/recipients/search",
+    "alias": "Recipients search API",
+    "type": "api"
+  },
+
+  // count
+  {
+    "name": "/api/recipients/count",
+    "alias": "Recipients count API",
+    "type": "api"
+  },
+
+  // delete
+  {
+    "name": "/api/recipients/delete",
+    "alias": "Recipients delete API",
+    "type": "api"
+  },
+
   // Client
 
   // Products

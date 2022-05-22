@@ -1,6 +1,8 @@
 // https://umijs.org/config/
+import React from 'react';
 import { defineConfig } from 'umi';
 import { join } from 'path';
+import { SmileOutlined } from '@ant-design/icons';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 
@@ -277,6 +279,37 @@ export default defineConfig({
           icon: 'smile',
           path: '/phones/activate/:id',
           component: './phones/phone-activate',
+        },
+      ],
+    },
+    {
+      // access: 'canAccess',
+      path: '/recipient',
+      icon: 'smile',
+      name: 'recipient',
+      routes: [
+        {
+          path: '/recipient',
+          redirect: '/recipient/list',
+        },
+        {
+          name: 'List',
+          icon: 'smile',
+          path: '/recipient/list',
+          component: './recipient/list',
+        },
+        {
+          name: 'New',
+          icon: 'smile',
+          path: '/recipient/new',
+          component: './recipient/entry',
+        },
+        {
+          name: 'Update',
+          hideInMenu: true,
+          icon: 'smile',
+          path: '/recipient/edit/:id',
+          component: './recipient/update',
         },
       ],
     },
