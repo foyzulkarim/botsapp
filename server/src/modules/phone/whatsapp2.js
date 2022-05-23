@@ -31,7 +31,10 @@ function start(client, number) {
   }
 
   client.onMessage((msg) => {
-    console.log("message", msg.from, msg.body);
+    console.log("message", msg);
+    if (msg.from === "status@broadcast") {
+      return;
+    }
     if (msg.body === "!ping") {
       client.reply(msg.from, "pong", "whatsapp");
     }
@@ -92,9 +95,9 @@ function start(client, number) {
     }
 
     if (
-      msg === "authenticated" ||
-      msg ===
-      "I am groot. I don't understand your words. Please type `sos` for more info."
+      msg.body === "authenticated" ||
+      msg.body ===
+        "I am groot. I don't understand your words. Please type `sos` for more info."
     ) {
       handled = true;
     }
@@ -113,6 +116,14 @@ function start(client, number) {
             );
           }
         }
+      );
+    }
+    console.log("sending msg");
+    if (!handled && !msg.isGroupMsg) {
+      console.log("groot");
+      client.sendText(
+        msg.from,
+        "I am groot. I don't understand your words. Please type `sos` for more info."
       );
     }
   });
@@ -139,7 +150,7 @@ const createClient = async (number, req, res) => {
   }
   console.log("creating client ", number);
   const options = {
-    multidevice: true, // for version not multidevice use false.(default: true)
+    multidevice: false, // for version not multidevice use false.(default: true)
     folderNameToken: ".tokens", // folder name when saving tokens
     // mkdirFolderToken: '', //folder directory tokens, just inside the venom folder, example:  { mkdirFolderToken: '/node_modules', } //will save the tokens folder in the node_modules directory
     headless: true, // Headless chrome
@@ -148,9 +159,15 @@ const createClient = async (number, req, res) => {
     debug: false, // Opens a debug session
     logQR: false, // Logs QR automatically in terminal
     browserWS: "", // If u want to use browserWSEndpoint
-    browserArgs: [""], // Original parameters  ---Parameters to be added into the chrome browser instance
-    addBrowserArgs: [""], // Add broserArgs without overwriting the project's original
-    puppeteerOptions: {}, // Will be passed to puppeteer.launch
+    browserArgs: ["--no-sandbox"], // Original parameters  ---Parameters to be added into the chrome browser instance
+    addBrowserArgs: ["--no-sandbox"], // Add broserArgs without overwriting the project's original
+    puppeteerOptions: {
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--remote-debugging-port=9222",
+      ],
+    }, // Will be passed to puppeteer.launch
     disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
     disableWelcome: true, // Will disable the welcoming message which appears in the beginning
     updatesLog: false, // Logs info updates automatically in terminal
@@ -164,31 +181,24 @@ const createClient = async (number, req, res) => {
 
   const qrCatch = (base64Qrimg, asciiQR, attempts, urlCode) => {
     console.log("Number of attempts to read the qrcode: ", attempts);
-    console.log("Terminal qrcode: ", asciiQR);
+    // console.log("Terminal qrcode: \n", asciiQR);
     // console.log('base64 image string qrcode: ', base64Qrimg);
     console.log("urlCode (data-ref): ", urlCode);
-    if (res) {
-      res && res.write(urlCode);
+    if (res !== null && attempts === 1) {
+      return res.status(200).send(urlCode);
     }
   };
 
   const statusFind = (status, s) => {
     console.log("Status: ", status, s);
     if (status === "qrReadSuccess") {
-      if (res) {
-        res.end();
-      }
+      // if (res) {
+      //   res.end();
+      // }
     }
   };
 
-  const client = await venom.create(
-    number,
-    qrCatch,
-    statusFind,
-    options,
-    null,
-    null
-  );
+  const client = await venom.create(number, qrCatch, null, options, null, null);
   const device = await client.getHostDevice();
   console.log("client", device);
   start(client, number);

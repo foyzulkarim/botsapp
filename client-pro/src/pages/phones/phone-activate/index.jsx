@@ -34,6 +34,41 @@ const BasicForm = (props) => {
     const c1 = useRef(null);
     const [loading, setLoading] = useState(false);
 
+    // const getCode = async () => {
+    //     var obj = {
+    //         method: 'GET',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json',
+    //             'Authorization': `Bearer ${auth.token}`,
+    //         }
+    //     }
+    //     let res = await fetch(`${API_URL}/api/phones/activate?number=${phone}`, obj);
+    //     let reader = res.body.getReader();
+    //     let result;
+    //     let decoder = new TextDecoder('utf8');
+    //     const canvas = c1.current;
+    //     const ctx = canvas.getContext('2d');
+    //     setLoading(true);
+    //     while (!result?.done) {
+    //         result = await reader.read();
+    //         let chunk = decoder.decode(result.value);
+    //         console.log(chunk);
+    //         QRCode.toCanvas(canvas, chunk, function (error) {
+    //             if (error) console.error(error)
+    //             console.log('success!');
+    //         })
+    //     }
+    //     console.log(result);
+    //     if (result.done) {
+    //         console.log('done');
+    //         ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //         setLoading(false);
+    //         message.success("Phone is connected");
+    //         history.push(`/phones`);
+    //     }
+    // };
+
     const getCode = async () => {
         var obj = {
             method: 'GET',
@@ -45,29 +80,17 @@ const BasicForm = (props) => {
         }
         let res = await fetch(`${API_URL}/api/phones/activate?number=${phone}`, obj);
         let reader = res.body.getReader();
-        let result;
         let decoder = new TextDecoder('utf8');
         const canvas = c1.current;
-        const ctx = canvas.getContext('2d');
-        setLoading(true);
-        while (!result?.done) {
-            result = await reader.read();
-            let chunk = decoder.decode(result.value);
-            console.log(chunk);
-            QRCode.toCanvas(canvas, chunk, function (error) {
-                if (error) console.error(error)
-                console.log('success!');
-            })
-        }
-        console.log(result);
-        if (result.done) {
-            console.log('done');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            setLoading(false);
-            message.success("Phone is connected");
-            history.push(`/phones`);
-        }
-    };
+        //const ctx = canvas.getContext('2d');
+        const result = await reader.read();
+        let chunk = decoder.decode(result.value);
+        console.log(chunk);
+        QRCode.toCanvas(canvas, chunk, function (error) {
+            if (error) console.error(error)
+            console.log('success!');
+        })
+    }
 
     return (
         <PageContainer content="My amazing product entry form">
