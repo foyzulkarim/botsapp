@@ -5,3 +5,5 @@ sudo chmod 666 /var/run/docker.sock
 docker run --name mongodb -d -p 27017:27017 mongo
 
 docker run --name redisdb -d -p 6379:6379 redis
+
+scp -r dist foyzul@IP:/home/github/botsapp/client-pro/dist

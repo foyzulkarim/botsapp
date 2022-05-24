@@ -6,7 +6,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 
-const { REACT_APP_ENV, REACT_APP_API_URL, REACT_APP_DEFAULT_PAGE_SIZE } = process.env;
+const { REACT_APP_ENV, REACT_APP_API_URL, REACT_APP_DEFAULT_PAGE_SIZE, REACT_APP_YOUTUBE_ID } = process.env;
 console.log('REACT_APP_ENV', REACT_APP_ENV, 'REACT_APP_API_URL', REACT_APP_API_URL, 'REACT_APP_DEFAULT_PAGE_SIZE', REACT_APP_DEFAULT_PAGE_SIZE);
 export default defineConfig({
   hash: true,
@@ -452,5 +452,6 @@ export default defineConfig({
   define: {
     API_URL: REACT_APP_API_URL || 'http://localhost:5005',
     DEFAULT_PAGE_SIZE: REACT_APP_DEFAULT_PAGE_SIZE || 10,
+    YOUTUBE_ID: REACT_APP_YOUTUBE_ID || '',
   },
 });
