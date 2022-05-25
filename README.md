@@ -1,18 +1,14 @@
-# Welcome to the RBAC MERN Boilerplate project
+# Welcome to the BizBook365 WhatsApp bot project
 
-### _A complete (Work in progress now) MERN boilerplate repository with RBAC feature, following all production best practices._
+### _A bot builder on top of puppeteer's headless web browser mimicing your web.whatsapp.com functionalities._
 
-In this repository I will keep adding the production best practices we should follow in a MERN (MongoDB, Express.js, React.js, and Node.js) project. Also for better UX I am using Antd Pro for the UI. May be later I will use MUI as well.
+## Demo (Bangla)
 
-Below are the sample of a sample list page:
-
-![Product List Page](./docs/images/product-list.png)
-
-![Product List Page](./docs/images/product-list-search.png)
+[![Watch the video](./docs/images/bizbook365-wabot.png)](https://youtu.be/https://youtu.be/FSwREEdXD9Q)
 
 ## Technology stack
 
-As the name suggests, this repository is built on top of Express.js and React.js, however in the implementation detail, we will find other supporting technologies as well.
+This repository is built on top of Express.js, React.js, MongoDB and venom library, however in the implementation detail, we will find other supporting technologies as well.
 
 #### Client side
 
@@ -30,71 +26,11 @@ As the name suggests, this repository is built on top of Express.js and React.js
 - Swagger - Swagger (Not done yet)
 - Jest - JavaScript testing framework
 - Super Test - Super test API testing framework
+- venom-bot - Venom is the most complete javascript library for Whatsapp
 
 Details frameworks and packages can be found in the package.json files in server and client directory.
 
 ## Running the application
-
-This project can be run basically in two ways. One is using docker, other way is to run manually via vscode.
-
-### Docker
-
-Depending on the MongoDB hosting option, we choose the appropriate docker-compose file.
-
-#### Docker compose files
-
-Currently we have two docker-compose files:
-
-- `docker-compose.mongocloud.yml` - MongoDB.com hosted cluster
-- `docker-compose.yml` - Local MongoDB container
-
-##### Notes
-
-1. We need to change the `MONGODB_CLOUD_URL` in `docker-compose.mongocloud.yml` to the appropriate MongoDB URL.
-2. We need to change the `REACT_APP_API_URL` in `docker-compose.yml` to the appropriate API URL. If we want to expose our client to the internet, we need to change the `REACT_APP_API_URL` to the appropriate API URL. Otherwise keep `REACT_APP_API_URL` as `http://localhost:8002`.
-
-**Run docker-compose commands**
-
-It is expected that the machine must have docker and docker-compose installed. Go to the root of the repository and execute appropriate commands. This will spin up the server and client containers along with the MongoDB container (if we are using local MongoDB server) inside of Docker environment.
-
-
-**Using docker containers with cloud hosted MongoDB**
-
-```sh
-> cd project-root
-> docker-compose -f docker-compose.mongocloud.yml build
-> docker-compose -f docker-compose.mongocloud.yml up
-```
-
-**Using docker containers with local MongoDB**
-```sh
-> cd project-root
-> docker-compose build
-> docker-compose up
-```
-
-The client and server both are up and running and we should see the following screen if we navigate to the client url.
-
-![Login screen](./docs/images/login-screen.png)
-
-
-- seed data
- Go inside of the docker container and execute below commands. These will seed the database with `roles`, `users` and `products` data.
-
-  ```sh
-  docker exec -it appserver bash
-  npm run db:seed
-  npm run db:migrate
-  ```
-
-  You should see the following output:
-  ![Product List Page](./docs/images/appserver-lsla.png)
-
-  ![Product List Page](./docs/images/appserver-db-seed-users.png)
-  
-  ![Product List Page](./docs/images/appserver-db-seed-products.png)
-
-  You should be now login to the application and see the products list.
 
 ### Visual Studio Code
 
@@ -109,14 +45,19 @@ The client and server both are up and running and we should see the following sc
 - Create a `.env` file inside of the `server` directory. Add the below entries or change accordingly. You can follow the `.env.sample` file to see the format.
 
   ```
-  DB_HOST=localhost
-  DB_PORT=27017
-  DB_NAME=appdb
-  JWT_SECRET=secret
-  JWT_EXPIRES_IN=3600
-  PORT=5000
-  IS_MONGODB_CLOUD_URL=false
-  MONGODB_CLOUD_URL=mongodb+srv:// <USER >: <PASSWORD >@cluster0.abcd.mongodb.net/myFirstDatabase?retryWrites=true
+DB_HOST=localhost
+DB_PORT=27017
+DB_NAME=appdb
+JWT_SECRET=secret
+JWT_EXPIRES_IN=100
+PORT=5000
+IS_MONGODB_CLOUD_URL=false
+MONGODB_CLOUD_URL=mongodb+srv:// <USER >: <PASSWORD >@cluster0.abcd.mongodb.net/myFirstDatabase?retryWrites=true
+DEFAULT_PAGE_SIZE=10
+SENDGRID_API_KEY=123
+FRONTEND_URL=http://localhost:8000
+EMAIL_SENDER=info@bizbook365.com
+DEFAULT_EMAIL_RECEIVER=example.user@example.com
   ```
 
 #### Server commands
@@ -139,16 +80,14 @@ yarn start
 
 ## Data seeding
 
-To seed the database, we need to run the following commands in the docker container. You can run these commands in the terminal as well if you are running the server and client outside of the docker environment.
-I assume we are running appserver in the docker container.
+To seed the database, we need to run the following commands in the server directory.
 
 ```sh
-docker exec -it appserver bash
 npm run db:seed
 npm run db:migrate
 ```
 
-You should be able to see the username and password in the `/server/setup/users.json` file.
+You should be able to see the username and password in the `/server/setup/users.json` file. You can change these as you see fit.
 
 ## Permission management ui 
 
@@ -210,7 +149,7 @@ To run the tests, we can run `npm run test` command.
 
 ## License
 
-This project is [MIT licensed](https://github.com/facebook/react/blob/main/LICENSE).
+This project is [MIT licensed](https://github.com/facebook/react/blob/main/LICENSE. However other open source projects used in this repository contains their own license.
 
 [//]: # "These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax"
 [node.js]: http://nodejs.org
@@ -232,9 +171,3 @@ This project is [MIT licensed](https://github.com/facebook/react/blob/main/LICEN
 For now, I am not taking any community contritutions in terms of code.  But if you have any suggestions or you found any bugs, please feel free to open an issue or a pull request.
 
 On the other hand, if you want to know something, or want to start a discussion about this  project, please start a discussion in our GitHub's discussion board.
-
-## Tutorials about how to build or use this project
-
-I have been screen recording the coding steps of this project. You can find the videos in the [YouTube playlist](https://www.youtube.com/playlist?list=PLEYpvDF6qy8aUl1KnB1oaZbwLE2oPcZmz). These  videos are only in **Bangla**, but I am happy to take special dedicated+paid sessions in English for international intersted audience. Feel free to reach out to me at foyzulkarim@gmail.com for any kind of help.
-
-Thanks. Cheers.
