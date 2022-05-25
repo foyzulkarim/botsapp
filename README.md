@@ -4,7 +4,7 @@
 
 ## Demo (Bangla)
 
-[![Watch the video](./docs/images/bizbook365-wabot.png)](https://youtu.be/https://youtu.be/FSwREEdXD9Q)
+[![Watch the video](./docs/images/bizbook365-wabot.png)](https://youtu.be/FSwREEdXD9Q)
 
 ## Technology stack
 
