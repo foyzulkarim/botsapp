@@ -2,9 +2,12 @@
 
 ### _A bot builder on top of puppeteer's headless web browser mimicing your web.whatsapp.com functionalities._
 
-## Demo (Bangla)
+## Demo 
+[wabot.bizbook365.com](https://wabot.bizbook365.com)
 
+### Video explanation in Bangla
 [![Watch the video](./docs/images/bizbook365-wabot.png)](https://youtu.be/FSwREEdXD9Q)
+
 
 ## Technology stack
 
