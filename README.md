@@ -47,7 +47,7 @@ Details frameworks and packages can be found in the package.json files in server
 - To run via vscode, we should run the server and client side projects separately, and also make sure mongodb is up and running.
 - Create a `.env` file inside of the `server` directory. Add the below entries or change accordingly. You can follow the `.env.sample` file to see the format.
 
-  ```
+```
 DB_HOST=localhost
 DB_PORT=27017
 DB_NAME=appdb
@@ -61,7 +61,7 @@ SENDGRID_API_KEY=123
 FRONTEND_URL=http://localhost:8000
 EMAIL_SENDER=info@bizbook365.com
 DEFAULT_EMAIL_RECEIVER=example.user@example.com
-  ```
+```
 
 #### Server commands
 We assume we run the MongoDB in the docker container.
